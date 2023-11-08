@@ -40,7 +40,7 @@
 
    <div class="box-container">
       <?php
-         $select_users = mysqli_query($conn, "SELECT * FROM `users`") or die('query failed');
+         $select_users = mysqli_query($conn, "SELECT * FROM `users` WHERE user_type= 'user'") or die('query failed');
          while($fetch_users = mysqli_fetch_assoc($select_users)){
       ?>
       <div class="box">
