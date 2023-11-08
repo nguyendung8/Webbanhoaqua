@@ -114,8 +114,8 @@
                     <img class="peoductdetail-img" src="uploaded_img/<?php echo $productItem['image']; ?>" alt="">
                 </div>
                 <p class="peoductdetail-author">
-                    Thương hiệu: 
-                    <?php echo ($productItem['trademark']) ?>
+                    Xuất xứ: 
+                    <?php echo ($productItem['origin']) ?>
                 </p>
                 <p class="peoductdetail-author">
                     Số lượng còn: 

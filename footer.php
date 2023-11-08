@@ -1,17 +1,19 @@
 <section class="footer">
-
+   <style>
+      .box a:hover {
+         text-decoration: none !important;
+      }
+   </style>
    <div class="box-container">
-
-      <div class="box">
-         <a href="home.php">Trang chủ</a>
-         <a href="about.php">Thông tin</a>
-         <a href="shop.php">Cửa hàng</a>
-         <a href="contact.php">Liên hệ</a>
-      </div>
 
       <div class="box">
          <a href="login.php">Đăng nhập</a>
          <a href="register.php">Đăng ký</a>
+      </div>
+      
+      <div class="box">
+         <a href="home.php">Trang chủ</a>
+         <a href="shop.php">Cửa hàng</a>
          <a href="cart.php">Giỏ hàng</a>
          <a href="orders.php">Đơn hàng</a>
       </div>
@@ -32,6 +34,6 @@
 
    </div>
 
-   <p class="credit"> &copy; Copyright  @ <?php echo date('Y'); ?> by <span> Bui Trung Kien</span> </p>
+   <p class="credit"> &copy; Copyright  @ <?php echo date('Y'); ?> by <span> Happy Fresh</span> </p>
 
 </section>

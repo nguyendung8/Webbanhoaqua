@@ -64,7 +64,7 @@
       .view-product {
          margin-top: 5px;
          padding: 5px 20px;
-         background-color: burlywood;
+         background-color: #9787de;
          font-size: 16px;
          color: #fff;
          border-radius: 6px;
@@ -78,16 +78,6 @@
    
 <?php include 'header.php'; ?>
 
-<section class="home">
-
-   <div class="content">
-      <h3>Mỗi ngày một quyển truyện.</h3>
-      <p>Những quyển truyện đều mang trong mình những bài học ý nghĩa, những trải nghiệm đáng giá.</p>
-      <a href="about.php" class="white-btn">Khám phá thêm</a>
-   </div>
-
-</section>
-
 <section class="products">
 
    <h1 class="title">Sản phẩm mới nhất</h1>
@@ -95,7 +85,7 @@
    <div class="box-container">
 
       <?php  
-         $select_products = mysqli_query($conn, "SELECT * FROM `products` ORDER BY id DESC  LIMIT 6") or die('query failed');
+         $select_products = mysqli_query($conn, "SELECT * FROM `products` ORDER BY id DESC  LIMIT 8") or die('query failed');
          if(mysqli_num_rows($select_products) > 0){
             while($fetch_products = mysqli_fetch_assoc($select_products)){
       ?>
@@ -107,7 +97,7 @@
                      $cate_name = mysqli_fetch_assoc($result)
                    ?>
                   <div class="name"><?php echo $fetch_products['name']; ?> (<?php echo $cate_name['name']; ?>)</div>
-                  <p>Thương hiệu: <?php echo $fetch_products['trademark']; ?></p>
+                  <p>Xuất xứ: <?php echo $fetch_products['origin']; ?></p>
                   <p>Mô tả: <?php echo $fetch_products['describes']; ?></p>
                   <div class="price"><?php echo number_format($fetch_products['newprice'],0,',','.' ); ?>/<span style="text-decoration-line:line-through"><?php echo number_format($fetch_products['price'],0,',','.' ); ?></span> VND (<?php echo $fetch_products['discount']; ?>% SL: <?php echo $fetch_products['quantity']; ?>)</div>
                   <span style="font-size: 17px; display: flex;">Số lượng mua:</span>
@@ -137,24 +127,14 @@
    <div class="flex">
 
       <div class="image">
-         <img src="images/about-img.jpg" alt="">
+         <img src="images/homeimg.jpg" alt="">
       </div>
 
       <div class="content">
-         <h3>Comic</h3>
-         <p>Từ hội những bạn trẻ yêu thích đọc truyện, chúng mình muốn cùng chia sẻ những đam mê và sở thích tới mọi người.</p>
+         <h3>Happy Fresh</h3>
+         <p>Trái cây cung cấp các chất dinh dưỡng quan trọng cho sức khỏe và duy trì một cơ thể khỏe mạnh.</p>
       </div>
 
-   </div>
-
-</section>
-
-<section class="home-contact">
-
-   <div class="content">
-      <h3>Bạn có thắc mắc?</h3>
-      <p>Hãy để lại những điều bạn còn thắc mắc, băn khoăn hay muốn chia sẻ thêm về những quyển truyện cho chúng mình tại đây để chúng mình có thể giải đáp giúp bạn</p>
-      <a href="contact.php" class="white-btn">Liên hệ</a>
    </div>
 
 </section>
