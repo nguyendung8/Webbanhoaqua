@@ -48,7 +48,7 @@
             <a href="cart.php"> <i class="fas fa-shopping-cart"></i> <span>(<?php echo $cart_rows_number; ?>)</span> <span>(<?php echo number_format($total,0,',','.' ); ?> VND)</span> </a>
          </div>
 
-         <div class="user-box">
+         <div style="z-index: 1000;" class="user-box">
             <p>Tên người dùng : <span><?php echo $_SESSION['user_name']; ?></span></p>
             <p>Email : <span><?php echo $_SESSION['user_email']; ?></span></p>
             <a href="logout.php" class="delete-btn">Đăng xuất</a>

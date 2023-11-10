@@ -41,6 +41,33 @@
 
    }
 
+   // Số sản phẩm mỗi trang
+   $productsPerPage = 4;
+   // Lấy trang hiện tại từ biến GET, mặc định là trang 1
+   if(isset($_GET["page"])) {
+      $current_page = $_GET["page"];
+  } else {
+      $current_page = 1;
+  }
+   // Tính OFFSET để lấy sản phẩm cho trang hiện tại
+   $offset = ($current_page - 1) * $productsPerPage;
+   $querry =  mysqli_query($conn, "SELECT * FROM `products` LIMIT 1");
+   $first_cate_id = mysqli_fetch_assoc($querry);
+   if(isset($_GET['cate_id'])) {
+      $cate_id = $_GET['cate_id'];
+   } else {
+      $cate_id = $first_cate_id['cate_id'];
+   }
+   $sql_select_products = "SELECT p.* FROM products p JOIN categorys c ON p.cate_id = c.id  WHERE cate_id = '$cate_id' AND p.quantity > 0 LIMIT $offset, $productsPerPage";
+   $result = mysqli_query($conn, $sql_select_products);
+
+   $model = [];
+   if ($result->num_rows > 0) {
+      while ($row = $result->fetch_assoc()) {
+         $model[] = $row;
+      }
+   }
+
 ?>
 
 <!DOCTYPE html>
@@ -84,6 +111,28 @@
          padding-right: 18px;
          border-right: none;
       }
+      .pagination {
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         border: 1px solid #ddd;
+         width: fit-content;
+         margin: auto;
+         margin-top: 22px;
+         border-radius: 4px;
+      }
+      .pagination a {
+         width: 43px;
+         height: 34px;
+         border-right: 1px solid #ddd;
+         color: #ca14d8;
+         text-align: center;
+         line-height: 34px;
+      }
+      .pagination a:hover {
+         opacity: 0.9;
+         background-color: #ddd;
+      }
    </style>
 </head>
 <body>
@@ -94,14 +143,6 @@
 <section class="products">
 
    <h1 class="title">Tất cả sản phẩm</h1>
-
-   <!-- <select class="sort-box" onchange="window.location = this.options[this.selectedIndex].value">
-      <option>Sắp xếp</option>
-      <option value="?field=id& sort=DESC">Sản phẩm mới nhất</option>
-      <option value="?field=id& sort=ASC">Sản phẩm cũ nhất</option>
-      <option value="?field=newprice& sort=ASC">Giá tăng dần</option>
-      <option value="?field=newprice& sort=DESC">Giá giảm dần</option>
-   </select> -->
    <div class="list-cate">
       <?php  
          $select_categoriess = mysqli_query($conn, "SELECT * FROM `categorys`") or die('query failed');
@@ -119,41 +160,38 @@
    <div style="clear:both"></div>
 
    <div class="box-container">
-
-      <?php  
-         $select_num= mysqli_query($conn, "SELECT id FROM `products`");
-         $querry =  mysqli_query($conn, "SELECT * FROM `products` LIMIT 1");
-         $first_catge_id = mysqli_fetch_assoc($querry);
-         if(mysqli_num_rows($select_num) > 0){
-            if(isset($_GET['cate_id'])) {
-               $cate_id = $_GET['cate_id'];
-            } else {
-               $cate_id = $first_catge_id['cate_id'];
-            }
-            $select_products = mysqli_query($conn, "SELECT p.* FROM products p JOIN categorys c ON p.cate_id = c.id  WHERE cate_id = $cate_id AND p.quantity > 0") or die('query failed');
-            while($fetch_products = mysqli_fetch_assoc($select_products)){
-                  ?>
-                     <form action="" method="post" class="box">
-                        <img width="207px" height="224px" src="uploaded_img/<?php echo $fetch_products['image']; ?>" alt="">
-                        <div class="name"><?php echo $fetch_products['name']; ?></div>
-                        <div class="sub-name">Xuất xứ: <?php echo $fetch_products['origin']; ?></div>
-                        <div class="sub-name">Mô tả: <?php echo $fetch_products['describes']; ?></div>
-                        <div class="price"><?php echo number_format($fetch_products['newprice'],0,',','.' ); ?>/<span style="text-decoration-line:line-through; text-decoration-thickness: 2px; text-decoration-color: grey"><?php echo number_format($fetch_products['price'],0,',','.' ); ?></span> VND (<?php echo $fetch_products['discount']; ?>% SL: <?php echo $fetch_products['quantity']; ?>)</div>
-                        <span style="font-size: 17px; display: flex;">Số lượng mua:</span>
-                        <input type="number" min="<?=($fetch_products['quantity']>0) ? 1:0 ?>" max="<?php echo $fetch_products['quantity']; ?>" name="product_quantity" value="<?=($fetch_products['quantity']>0) ? 1:0 ?>" class="qty">
-                        <input type="hidden" name="product_name" value="<?php echo $fetch_products['name']; ?>">
-                        <input type="hidden" name="product_price" value="<?php echo $fetch_products['newprice']; ?>">
-                        <input type="hidden" name="product_image" value="<?php echo $fetch_products['image']; ?>">
-                        <input type="submit" value="Thêm vào giỏ hàng" name="add_to_cart" class="btn">
-                     </form>
-                  <?php
-               }
-         }else{
-            echo '<p class="empty">Chưa có sản phẩm được bán!</p>';
-         }
-      ?>
+      <?php if (count($model) > 0) : ?>
+         <?php foreach ($model as $fetch_products) : ?>
+            <form action="" method="post" class="box">
+               <img width="207px" height="224px" src="uploaded_img/<?php echo $fetch_products['image']; ?>" alt="">
+               <div class="name"><?php echo $fetch_products['name']; ?></div>
+               <div class="sub-name">Xuất xứ: <?php echo $fetch_products['origin']; ?></div>
+               <div class="sub-name">Mô tả: <?php echo $fetch_products['describes']; ?></div>
+               <div class="price"><?php echo number_format($fetch_products['newprice'],0,',','.' ); ?>/<span style="text-decoration-line:line-through; text-decoration-thickness: 2px; text-decoration-color: grey"><?php echo number_format($fetch_products['price'],0,',','.' ); ?></span> VND (<?php echo $fetch_products['discount']; ?>% SL: <?php echo $fetch_products['quantity']; ?>)</div>
+               <span style="font-size: 17px; display: flex;">Số lượng mua:</span>
+               <input type="number" min="<?=($fetch_products['quantity']>0) ? 1:0 ?>" max="<?php echo $fetch_products['quantity']; ?>" name="product_quantity" value="<?=($fetch_products['quantity']>0) ? 1:0 ?>" class="qty">
+               <input type="hidden" name="product_name" value="<?php echo $fetch_products['name']; ?>">
+               <input type="hidden" name="product_price" value="<?php echo $fetch_products['newprice']; ?>">
+               <input type="hidden" name="product_image" value="<?php echo $fetch_products['image']; ?>">
+               <input type="submit" value="Thêm vào giỏ hàng" name="add_to_cart" class="btn">
+            </form>
+         <?php endforeach; ?>
    </div>
-
+         <?php
+         // Tạo phân trang
+            $sql_count = "SELECT * FROM products WHERE cate_id = '$cate_id'";
+            $result_count = $conn->query($sql_count);
+            $row_count = $result_count->num_rows;
+            $total_pages = ceil($row_count / $productsPerPage);
+            echo("<div class='pagination'>");
+               for ($i = 1; $i <= $total_pages; $i++) {
+                     echo "<a style='font-size: 20px;' href='shop.php?cate_id=".$cate_id."&page=".$i."'>" . $i . "</a>";
+               }
+            echo("</div>");
+         ?>
+      <?php else : ?>
+      <p class="alert alert-danger">Danh sách sản phẩm trống</p>
+      <?php endif; ?>
 </section>
 
 <?php include 'footer.php'; ?>
